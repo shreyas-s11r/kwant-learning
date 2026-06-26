@@ -1,0 +1,563 @@
+**what happened** while setting up?
+
+Let's go through everything from scratch.
+
+---
+
+# Big Picture
+
+Think of your computer as a building.
+
+* **Windows** is the building.
+* **Python** is a workshop inside the building.
+* **Conda environments** are separate workbenches.
+* **VS Code** is just your desk where you write instructions.
+* **Kwant** is a specialized toolbox sitting on one workbench.
+
+The important realization is:
+
+> **VS Code is not Python.**
+>
+> **Conda is not Python.**
+>
+> **Jupyter is not Python.**
+
+They're all different things working together.
+
+---
+
+# Step 1: Python
+
+Initially you installed
+
+```
+Python 3.13
+```
+
+This is just an interpreter.
+
+Its only job is
+
+```
+Read Python code
+↓
+Execute it
+```
+
+Nothing more.
+
+---
+
+Then we installed
+
+```
+Python 3.12
+```
+
+because Kwant currently works better with it.
+
+Now your computer has
+
+```
+Python 3.13
+Python 3.12
+```
+
+living happily together.
+
+---
+
+# Step 2: Why Conda?
+
+Suppose tomorrow you work on
+
+Project A
+
+```
+Python 3.10
+TensorFlow
+```
+
+Project B
+
+```
+Python 3.12
+Kwant
+```
+
+Project C
+
+```
+Python 3.13
+PyTorch
+```
+
+If everything were installed globally...
+
+```
+Python
+TensorFlow
+PyTorch
+Kwant
+```
+
+they would constantly fight over versions.
+
+Instead Conda creates isolated environments.
+
+Think of them like this
+
+```
+Windows
+
+├── base
+│     Python 3.10
+│
+├── kwant
+│     Python 3.12
+│     Kwant
+│     NumPy
+│
+├── ML
+│     Python 3.13
+│     TensorFlow
+│
+└── TCAD
+      Python 3.12
+      FEniCS
+```
+
+Each environment is its own miniature computer.
+
+That's why you typed
+
+```bash
+conda activate kwant
+```
+
+You were telling Conda
+
+> "Take me into the Kwant workshop."
+
+---
+
+# Step 3: What did `conda activate` actually do?
+
+Before activation
+
+```
+(base)
+```
+
+Python meant
+
+```
+Python 3.10
+```
+
+After
+
+```bash
+conda activate kwant
+```
+
+Python suddenly became
+
+```
+Python 3.12
+```
+
+Nothing magical happened.
+
+Conda simply changed your
+
+```
+PATH
+```
+
+temporarily.
+
+Imagine PATH as
+
+```
+Windows asks
+
+"Where should I search first?"
+
+Folder A
+Folder B
+Folder C
+```
+
+Conda puts
+
+```
+...\envs\kwant\
+```
+
+at the top.
+
+So when Windows searches for
+
+```
+python
+```
+
+it finds
+
+```
+...\kwant\python.exe
+```
+
+instead of
+
+```
+base/python.exe
+```
+
+---
+
+# Step 4: What happened when you typed
+
+```bash
+python --version
+```
+
+Windows looked inside
+
+```
+kwant/python.exe
+```
+
+and executed
+
+```
+Python 3.12
+```
+
+That's why it printed
+
+```
+Python 3.12.13
+```
+
+---
+
+# Step 5: Installing Kwant
+
+This command
+
+```bash
+conda install -c conda-forge kwant
+```
+
+means
+
+```
+conda install
+```
+
+↓
+
+Install software.
+
+---
+
+```
+-c
+```
+
+means
+
+```
+Channel
+```
+
+Think of channels as app stores.
+
+Examples
+
+```
+defaults
+conda-forge
+bioconda
+```
+
+We chose
+
+```
+conda-forge
+```
+
+because scientists maintain most research packages there.
+
+---
+
+Then
+
+```
+kwant
+```
+
+is simply the package name.
+
+Conda downloaded
+
+```
+Kwant
+NumPy
+SciPy
+Tinyarray
+```
+
+and placed them inside
+
+```
+envs/kwant
+```
+
+not globally.
+
+---
+
+# Step 6: Why VS Code worked
+
+VS Code is just an editor.
+
+Without Python it does nothing.
+
+Imagine Word.
+
+Word edits documents.
+
+VS Code edits code.
+
+---
+
+When you selected
+
+```
+kwant (Python 3.12)
+```
+
+you told VS Code
+
+> "Whenever I press Run,
+>
+> use THIS Python."
+
+That's all.
+
+It stores
+
+```
+Interpreter
+
+↓
+
+...\anaconda3\envs\kwant\python.exe
+```
+
+---
+
+# Step 7: The notebook
+
+Your notebook
+
+```
+.ipynb
+```
+
+isn't special.
+
+It is simply
+
+```
+Python cell
+
+↓
+
+Run
+
+↓
+
+Output
+
+↓
+
+Another cell
+```
+
+instead of
+
+```
+Entire file
+
+↓
+
+Run
+```
+
+---
+
+# Step 8: What happened here?
+
+```python
+import kwant
+```
+
+Python says
+
+```
+I need a package called kwant.
+```
+
+It searches
+
+```
+site-packages
+```
+
+inside
+
+```
+kwant environment
+```
+
+finds
+
+```
+kwant/
+```
+
+loads it.
+
+Done.
+
+---
+
+# Step 9
+
+When you wrote
+
+```python
+print(kwant.__version__)
+```
+
+Python literally asked
+
+```
+Hey Kwant,
+
+what's your version?
+```
+
+Kwant answered
+
+```
+1.5.0
+```
+
+---
+
+# Step 10
+
+Why didn't VS Code complain?
+
+Because
+
+```
+VS Code
+
+↓
+
+Uses Python
+
+↓
+
+Python is inside kwant
+
+↓
+
+kwant package exists
+
+↓
+
+Everything works.
+```
+
+---
+
+# Your folder
+
+Right now your folder probably looks like
+
+```
+kwant-learning/
+
+    Untitled-1.ipynb
+```
+
+Eventually it'll become
+
+```
+kwant-learning/
+
+    notebooks/
+
+        01_chain.ipynb
+
+        02_square_lattice.ipynb
+
+        03_transport.ipynb
+
+    scripts/
+
+    data/
+
+    figures/
+```
+
+This organization makes it easy to revisit and expand your work.
+
+---
+
+# The workflow you'll use from now on
+
+Every time you want to work on Kwant, the steps are simple:
+
+1. Open **VS Code**.
+2. Open your `kwant-learning` folder.
+3. Open the notebook or Python file you want.
+4. Check that the kernel/interpreter in the top right says **kwant (Python 3.12)**.
+5. Start writing code.
+
+You **don't need to reinstall anything** or run installation commands again.
+
+---
+
+# When do you need Anaconda Prompt again?
+
+Only when you want to **manage the environment**, for example:
+
+* Install a new package:
+
+  ```bash
+  conda install pandas
+  ```
+* Update a package:
+
+  ```bash
+  conda update kwant
+  ```
+* Create another environment:
+
+  ```bash
+  conda create -n myproject python=3.12
+  ```
+
+For everyday coding, you can stay in VS Code.
+
+---
+
+I have one suggestion that I think will help you a lot in the long run. Since you're planning to learn Kwant, PDE solvers, embedded systems, and other scientific tools, spend one session learning **how Python environments work** (PATH, interpreters, packages, virtual environments, and Conda). It seems like "setup knowledge," but once it clicks, you'll find that installing and switching between complex scientific software becomes much less intimidating. It's one of those foundational skills that pays off across almost every technical project you'll work on.
