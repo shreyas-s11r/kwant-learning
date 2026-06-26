@@ -18,3 +18,7 @@ Documenting my journey learning quantum tranport and simulations using the KWANT
 3. How is it implemented in Kwant?
 4. What do the simulation results mean?
 
+>Progress
+
+This repository will evolve as I learn. Early notebooks may be simple, but the long-term goal is to build realistic simulations of quantum and semiconductor devices.
+
